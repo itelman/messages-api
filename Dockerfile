@@ -12,7 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port 8000
-EXPOSE 10000
+EXPOSE 8000
 
-# Run the app using Uvicorn
-CMD ["gunicorn", "-w", "1", "main:app", "--bind", "0.0.0.0:10000", "--worker-class", "uvicorn.workers.UvicornWorker"]
+# Run the app using Gunicorn with Uvicorn workers
+CMD ["gunicorn", "-w", "4", "main:app", "--bind", "0.0.0.0:8000", "--worker-class", "uvicorn.workers.UvicornWorker"]
+

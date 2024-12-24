@@ -2,11 +2,13 @@
 
 ## Description
 
-This API manages messages in MongoDB Database. Tech Stack: FastAPI, MongoDB, RabbitMQ, Docker.
+This API manages messages in MongoDB Database.
+
+Tech Stack: FastAPI, MongoDB, Pydantic, WebSocket, Docker.
 
 ## How to run
 
-Use the link: [https://pradavan-rest.onrender.com](https://pradavan-rest.onrender.com)
+Use the link: [https://messages-api-10gq.onrender.com](https://messages-api-10gq.onrender.com)
 
 Or...
 
@@ -64,7 +66,7 @@ fastapi dev main.py
   }
   ```
 
-- **Endpoint: /api/messages?from_user_id=<int>&to_user_id=<int> --> GET ALL MESSAGES BY FROM_USER_ID & TO_USER_ID**:
+- **Endpoint: /api/messages?from_user_id={int}&to_user_id={int} --> GET ALL MESSAGES BY FROM_USER_ID & TO_USER_ID**:
     - Method: GET
     - Response:
   ```json
@@ -109,8 +111,12 @@ fastapi dev main.py
   ```
 
 - **Endpoint: /api/chat --> GET RANDOM MESSAGE FROM WEBSOCKET CONNECTION EACH SECOND**:
-    - Connection: WebSocket (ws://127.0.0.1:8000/api/chat)
-    - Response: <str>
+    - Connection:
+      WebSocket --> [ws://messages-api-10gq.onrender.com/api/chat](ws://messages-api-10gq.onrender.com/api/chat)
+    - Response:
+  ```json
+  {"_id": <str>, "content": <str>, "from_user_id": <int>, "to_user_id": <int>, "publish_timestamp": <float>}
+  ```
 
 ## Errors
 
