@@ -1,21 +1,28 @@
+import asyncio
+
+from dotenv import load_dotenv
 from fastapi import Depends
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
+from fastapi import WebSocketDisconnect
 from fastapi.exceptions import RequestValidationError
 from pymongo.errors import CollectionInvalid
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from internal.config.logger import loggers
 from internal.handlers.exceptions import ValidationErrorHandler, GeneralExceptionHandler
 from internal.service.services import Services, new_services
 from internal.validation.request_body import RequestBody
+from pkg.middleware.request_log import RequestLoggingMiddleware
 from pkg.store.mongo import NewMongoDB
 
 app = FastAPI()
+
+load_dotenv()
 
 
 @app.on_event("startup")
 async def startup_event():
     try:
-        # Define the schema validation rules
         validator = {
             "$jsonSchema": {
                 "bsonType": "object",
@@ -45,17 +52,18 @@ async def startup_event():
             }
         }
 
-        # Create the 'messages' collection with validation
         try:
             db = NewMongoDB()
             db.create_collection("messages", validator=validator)
-            print("Collection 'messages' created successfully.")
+            loggers.infoLog.info("Collection 'messages' created successfully.")
         except CollectionInvalid:
-            print("Collection 'messages' already exists.")
+            loggers.infoLog.info("Collection 'messages' already exists.")
 
     except Exception as e:
-        print(f"Error creating collection: {e}")
+        loggers.errorLog.error(f"Error creating collection: {e}")
 
+
+app.add_middleware(RequestLoggingMiddleware, services=new_services)
 
 app.add_exception_handler(RequestValidationError, ValidationErrorHandler)
 app.add_exception_handler(StarletteHTTPException, GeneralExceptionHandler)
@@ -94,6 +102,30 @@ def Delete(id: str, service: Services = Depends(new_services)):
     return {"id": id}
 
 
-@app.get(api_url + "/chat")
-def Chat():
-    pass
+@app.websocket(api_url + "/chat")
+async def websocket_endpoint(websocket: WebSocket, db=Depends(NewMongoDB)):
+    messages_collection = db["messages"]
+    await websocket.accept()
+
+    try:
+        while True:
+            random_message = messages_collection.aggregate([{"$sample": {"size": 1}}]).to_list(length=1)
+
+            if random_message:
+                message = random_message[0]
+
+                # await websocket.send_text(message["content"])
+
+                message["_id"] = str(message["_id"])
+                await websocket.send_json(message)
+
+            await asyncio.sleep(1)
+    except WebSocketDisconnect:
+        loggers.infoLog.info("Client disconnected")
+    except Exception as e:
+        raise e
+    finally:
+        try:
+            await websocket.close()
+        except RuntimeError:
+            loggers.infoLog.info("WebSocket was already closed.")

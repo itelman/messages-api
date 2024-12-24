@@ -1,6 +1,6 @@
 from internal.repository.models.exceptions import BadRequestException
 from internal.repository.mongo.messages import MessageRepository
-from internal.validation.request_body import RequestBody
+from internal.validation.request_body import RequestBody, RequestBodyValidation
 
 
 class MessageService:
@@ -8,7 +8,9 @@ class MessageService:
         self.message_repository = MessageRepository(db)
 
     def Create(self, req: RequestBody) -> str:
-        if not req.ContentExists():
+        validation = RequestBodyValidation(req)
+        validation.Validate()
+        if validation.errors:
             raise BadRequestException
 
         content, from_user_id, to_user_id = req.content, req.from_user_id, req.to_user_id
@@ -25,9 +27,11 @@ class MessageService:
         return messages
 
     def Update(self, id: str, req: RequestBody):
-        if not req.ContentExists():
+        validation = RequestBodyValidation(req)
+        validation.Validate()
+        if validation.errors:
             raise BadRequestException
-        
+
         try:
             self.Get(id)
         except Exception as err:

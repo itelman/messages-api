@@ -6,8 +6,20 @@ class RequestBody(BaseModel):
     from_user_id: int
     to_user_id: int
 
-    def ContentExists(self):
-        if not self.content.strip():
-            return False
 
-        return True
+class RequestBodyValidation:
+    def __init__(self, body: RequestBody):
+        self.body = body
+        self.errors = []
+
+    def ContentExists(self):
+        if not self.body.content.strip():
+            self.errors.append("Content is empty")
+
+    def AreUsersUnique(self):
+        if self.body.from_user_id == self.body.to_user_id:
+            self.errors.append("User cannot send messages to themself")
+
+    def Validate(self):
+        self.ContentExists()
+        self.AreUsersUnique()

@@ -108,6 +108,10 @@ fastapi dev main.py
   }
   ```
 
+- **Endpoint: /api/chat --> GET RANDOM MESSAGE FROM WEBSOCKET CONNECTION EACH SECOND**:
+    - Connection: WebSocket (ws://127.0.0.1:8000/api/chat)
+    - Response: <str>
+
 ## Errors
 
 - **400 (Bad Request) / 404 (Not Found) / 405 (Method Not Allowed) / 422 (Unprocessable Entity)**:

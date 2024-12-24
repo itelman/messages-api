@@ -1,17 +1,21 @@
-# client = MongoClient("mongodb://localhost:27017")  # Replace with your MongoDB URI if necessary
+import os
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://itelman:12345@cluster0.thayz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# Create a new client and connect to the server
+from internal.config.logger import loggers
+
+name = os.getenv("DB_USERNAME")
+pwd = os.getenv("DB_PASSWORD")
+
+uri = f"mongodb+srv://{name}:{pwd}@cluster0.thayz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri, server_api=ServerApi('1'))
-# Send a ping to confirm a successful connection
+
 try:
     client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    loggers.infoLog.info("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
-    print(e)
+    loggers.errorLog.error(e)
 
 db = client["messages_db"]
 
