@@ -18,7 +18,7 @@ class RequestBodyValidation:
 
     def AreUsersUnique(self):
         if self.body.from_user_id == self.body.to_user_id:
-            self.errors.append("User cannot send messages to themself")
+            self.errors.append("User cannot send messages to themselves")
 
     def Validate(self):
         self.ContentExists()

@@ -26,8 +26,8 @@ class MessageRepository:
     def ReadByID(self, id: str):
         try:
             object_id = ObjectId(id)
-        except Exception:
-            raise BadRequestException
+        except Exception as e:
+            raise BadRequestException(str(e))
 
         message = self.db.find_one({"_id": object_id})
         if not message:

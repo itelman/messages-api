@@ -1,19 +1,19 @@
 from http import HTTPStatus
 
-from fastapi import HTTPException
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 
-class BadRequestException(HTTPException):
+class BadRequestException(StarletteHTTPException):
     def __init__(self, msg: str = HTTPStatus.BAD_REQUEST.phrase):
         err = HTTPStatus.BAD_REQUEST
         super().__init__(status_code=err.value, detail=msg)
 
 
-class NotFoundException(HTTPException):
+class NotFoundException(StarletteHTTPException):
     def __init__(self):
         err = HTTPStatus.NOT_FOUND
         super().__init__(status_code=err.value, detail=err.phrase)
 
 
-BadRequestException = BadRequestException()
+BadRequestExceptionDefault = BadRequestException()
 NotFoundException = NotFoundException()
