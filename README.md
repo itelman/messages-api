@@ -115,7 +115,14 @@ fastapi dev main.py
       WebSocket --> [ws://messages-api-10gq.onrender.com/api/chat](ws://messages-api-10gq.onrender.com/api/chat)
     - Response:
   ```json
-  {"_id": <str>, "content": <str>, "from_user_id": <int>, "to_user_id": <int>, "publish_timestamp": <float>}
+  {
+    "_id": <str>,
+    "content": <str>,
+    "from_user_id": <int>,
+    "to_user_id": <int>,
+    "publish_timestamp": <float>,
+    "edit_timestamp": <float>
+  }
   ```
 
 ## Errors
