@@ -72,7 +72,7 @@ api_url = "/api"
 messages_url = api_url + "/messages"
 
 
-@app.post(messages_url)
+@app.post(messages_url, status_code=201)
 def Create(req: RequestBody, service: Services = Depends(new_services)):
     id = service.message_service.Create(req)
     return {"id": id}

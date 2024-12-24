@@ -45,7 +45,7 @@ fastapi dev main.py
     "to_user_id": <int>
   }
   ```
-    - Response:
+    - Response (201 Created):
   ```json
   {
     "id": <str>
@@ -54,7 +54,7 @@ fastapi dev main.py
 
 - **Endpoint: /api/messages/{id} --> GET MESSAGE BY ID**:
     - Method: GET
-    - Response:
+    - Response (200 OK):
   ```json
   {
     "_id": <str>,
@@ -68,7 +68,7 @@ fastapi dev main.py
 
 - **Endpoint: /api/messages?from_user_id={int}&to_user_id={int} --> GET ALL MESSAGES BY FROM_USER_ID & TO_USER_ID**:
     - Method: GET
-    - Response:
+    - Response (200 OK):
   ```json
   [
   {
@@ -94,7 +94,7 @@ fastapi dev main.py
     "to_user_id": <int>
   }
   ```
-    - Response:
+    - Response (200 OK):
   ```json
   {
     "id": <str>
@@ -103,7 +103,7 @@ fastapi dev main.py
 
 - **Endpoint: /api/messages/{id} --> DELETE MESSAGE**:
     - Method: DELETE
-    - Response:
+    - Response (200 OK):
   ```json
   {
     "id": <str>
