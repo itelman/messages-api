@@ -4,9 +4,9 @@ from fastapi import HTTPException
 
 
 class BadRequestException(HTTPException):
-    def __init__(self):
+    def __init__(self, msg: str = HTTPStatus.BAD_REQUEST.phrase):
         err = HTTPStatus.BAD_REQUEST
-        super().__init__(status_code=err.value, detail=err.phrase)
+        super().__init__(status_code=err.value, detail=msg)
 
 
 class NotFoundException(HTTPException):

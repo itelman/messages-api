@@ -26,9 +26,9 @@ async def ValidationErrorHandler(req: Request, exc: RequestValidationError):
 
 def GeneralExceptionHandler(req: Request, exc: StarletteHTTPException):
     request_data = {"query": str(req.url.query), "method": req.method, "path_parameters": req.path_params}
-    
+
     if exc.status_code == 400:
-        return DefaultErrorHandler(err=HTTPStatus.BAD_REQUEST, request=request_data)
+        return DefaultErrorHandler(err=HTTPStatus.BAD_REQUEST, details=exc.detail, request=request_data)
     elif exc.status_code == 404:
         return DefaultErrorHandler(err=HTTPStatus.NOT_FOUND, request=request_data)
     elif exc.status_code == 405:

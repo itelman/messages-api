@@ -11,7 +11,7 @@ class MessageService:
         validation = RequestBodyValidation(req)
         validation.Validate()
         if validation.errors:
-            raise BadRequestException
+            raise BadRequestException(validation.errors[0])
 
         content, from_user_id, to_user_id = req.content, req.from_user_id, req.to_user_id
 
@@ -30,7 +30,7 @@ class MessageService:
         validation = RequestBodyValidation(req)
         validation.Validate()
         if validation.errors:
-            raise BadRequestException
+            raise BadRequestException(validation.errors[0])
 
         try:
             self.Get(id)
